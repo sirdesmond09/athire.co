@@ -61,6 +61,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 class EncryptionSerializer(serializers.Serializer):
     payload = serializers.CharField(max_length=5000)
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(max_length=5000)
 
 
 class LogoutSerializer(serializers.Serializer):

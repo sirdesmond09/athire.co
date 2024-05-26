@@ -22,12 +22,13 @@ from rest_framework import generics
 from django.contrib.auth.hashers import check_password
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializers import OTPVerifySerializer
+from .serializers import OTPVerifySerializer, LoginSerializer
 from .models import OTP
 from django.core.mail import send_mail
 import json, time
 from .helpers.encryptors import data_encryptor
 import hashlib
+from django.contrib.auth import authenticate
 
 
 class OTPVerifyView(generics.CreateAPIView):
@@ -75,19 +76,20 @@ class SignupOTPVerifyView(generics.CreateAPIView):
         )
 
 
-@swagger_auto_schema(method="post", request_body=EncryptionSerializer())
+@swagger_auto_schema(method="post", request_body=LoginSerializer())
 @api_view(["POST"])
 def user_login(request):
-    encryption = EncryptionSerializer(data=request.data)
-    encryption.is_valid(raise_exception=True)
-    data = json.loads(data_encryptor.decrypt(encryption.validated_data.get("payload")))
+    serializer = LoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    print(serializer.data)
+    email = serializer.validated_data["email"]
+    password = serializer.validated_data["password"]
 
-    email = data["email"]
-    password = data["password"]
 
-    try:
-        user = User.objects.get(email=email)
-        if user.check_password(password):
+    user = User.objects.filter(email=email).first()
+    
+    if user:
+        if user.check_password(password) and user.is_active:
             otp = OTP.generate_otp(user)
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
@@ -102,9 +104,9 @@ def user_login(request):
             )
             return Response({"detail": "OTP sent to email", "access_token": access_token, "refresh_token": refresh_token})
         else:
-            return Response({"detail": "Invalid credentials"}, status=400)
-    except User.DoesNotExist:
-        return Response({"detail": "Invalid credentials"}, status=400)
+            return Response({"detail": "User not active"}, status=403)
+    else:
+        return Response({"detail": "Invalid credentials"}, status=401)
 
 
 class CustomUserViewSet(UserViewSet):

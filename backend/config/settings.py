@@ -198,7 +198,7 @@ class Common(Configuration):
     # MEDIA_ROOT = ''
 
     # use any email backend
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     EMAIL_HOST = "smtp.resend.com"
     EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
@@ -278,7 +278,7 @@ class Development(Common):
 
     DATABASES = values.DatabaseURLValue(os.getenv("DATABASE_URL"))
 
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     DEFAULT_FROM_EMAIL = "Dami from Athire.co <onboarding@resend.dev>"
 
 
