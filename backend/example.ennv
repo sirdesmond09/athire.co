@@ -1,0 +1,7 @@
+EMAIL_HOST_USER='resend'
+EMAIL_HOST_PASSWORD='re_3P45gh4b_Cudw8vrCiDiRZPwZC9657V6K'
+DJANGO_SECRET_KEY='asjfd42435nvaiun39g42pv9AN4BRPUIGANEIRSV0243OGBANVUb93xcvfer3brbyfn0305eh3bmdlb31535iubee372494fn'
+SOCIAL_SECRET='Giraffe#88Lemon42453Tree'
+ALLOWED_HOSTS='localhost,127.0.0.1'
+TRUSTED_ORIGINS='http://localhost,http://127.0.0.1'
+DATABASE_URL='postgresql://athire.co_dev:s1xNvlChYXF5@ep-damp-moon-a2nvlppm.eu-central-1.aws.neon.tech/athire.co'
